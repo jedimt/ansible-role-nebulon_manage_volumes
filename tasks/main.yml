@@ -1,0 +1,69 @@
+---
+# tasks file for ansible-role-nebulon-manage-volumes
+# To-Do: Add functionality to remove exports and volumes
+
+- name: Retrieve nPod by name
+  nebulon.nebulon_on.neb_npod_info:
+    name: "{{ npod_name }}"
+  register: npod_data
+  tags: npod_data
+
+- name: Create volumes
+  nebulon.nebulon_on.neb_volume:
+    name: "{{ item.name }}"
+    npod_uuid: "{{ npod_data.npods[0].uuid }}"
+    size: "{{ item.size }}"
+    mirrored: "{{ item.mirrored }}"
+    owner_spu_serial: "{{ item.owner_spu_serial }}"
+    backup_spu_serial: "{{ item.backup_spu_serial }}"
+    state: "{{ item.state }}"
+  loop: "{{ volumes }}"
+  register: volume_data
+  when:
+    - export_type != "absent"
+
+- name: Create LUN exports - Set exports to {{ export_type }}
+  nebulon.nebulon_on.neb_volume_access:
+    volume_uuid: "{{ item.volume.uuid }}"
+    host_uuid: "{{ host_uuid | default() }}"
+    state: "{{ export_type }}"
+  loop: "{{ volume_data.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: not volume_data.skipped
+
+
+# In order for me to get remove volumes/exports I need to find the volume UUIDs I want
+# to remove.
+- name: Get nPod volumes
+  nebulon.nebulon_on.neb_volume_info:
+    npod_uuid: "{{ npod_data.npods[0].uuid }}"
+    volume_name: "{{ item.name }}"
+  loop: "{{ volumes }}"
+  register: npod_volumes
+  tags: get_volumes
+
+# - name: debug
+#   debug:
+#     var: npod_volumes
+#   tags: get_volumes
+
+- name: Remove LUN exports
+  nebulon.nebulon_on.neb_volume_access:
+    volume_uuid: "{{ item.volumes[0].uuid }}"
+    host_uuid: "{{ host_uuid | default() }}"
+    state: "{{ export_type }}"
+  loop: "{{ npod_volumes.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: export_type == "absent"
+
+- name: Delete volumes
+  nebulon.nebulon_on.neb_volume:
+    name: "{{ item.item.name }}"
+    npod_uuid: "{{ npod_data.npods[0].uuid }}"
+    state: absent
+  loop: "{{ npod_volumes.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: volume_state == "absent"

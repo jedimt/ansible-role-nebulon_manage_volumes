@@ -1,0 +1,47 @@
+---
+# defaults file for ansible-role-nebulon-manage-volumes
+
+# State for all volumes
+volume_state: absent
+
+# Specify LUN export method
+# (present|all) -> All nPod servers can access export
+# (host) -> Make export available to a single host. Requires host_uuid
+# (local) -> Make export available only to the local host that owns the volume
+# (absent) -> Remove the volume export
+export_type: absent
+
+# nPod name to use when managing volumes/exports
+npod_name: "K8s_Lenovo"
+
+host_uuid:
+
+# List of volumes to manage (create or remove)
+volumes:
+  - name: "server-09-local-kadalu"
+    size: 1000000000000
+    mirrored: True
+    owner_spu_serial: 012386435A39449519
+    backup_spu_serial: 01231C5BA68435FC19
+    state: "{{ volume_state }}"
+
+  - name: "server-10-local-kadalu"
+    size: 1000000000000
+    mirrored: True
+    owner_spu_serial: 01231C5BA68435FC19
+    backup_spu_serial: 012386435A39449519
+    state: "{{ volume_state }}"
+
+  - name: "server-11-local-kadalu"
+    size: 1000000000000
+    mirrored: True
+    owner_spu_serial: 01234C1DDA95332EEE
+    backup_spu_serial: 01236AE13059FD35EE
+    state: "{{ volume_state }}"
+
+  - name: "server-12-local-kadalu"
+    size: 1000000000000
+    mirrored: True
+    owner_spu_serial: 01236AE13059FD35EE
+    backup_spu_serial: 01234C1DDA95332EEE
+    state: "{{ volume_state }}"

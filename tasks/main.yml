@@ -41,6 +41,7 @@
   loop: "{{ volumes }}"
   register: npod_volumes
   tags: get_volumes
+  when: (export_type == "absent") or (volume_state == "absent")
 
 - name: Remove LUN exports
   nebulon.nebulon_on.neb_volume_access:

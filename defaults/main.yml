@@ -9,7 +9,7 @@ volume_state: present
 # (host) -> Make export available to a single host. Requires host_uuid
 # (local) -> Make export available only to the local host that owns the volume
 # (absent) -> Remove the volume export
-export_type: present
+export_type: local
 
 # nPod name to use when managing volumes/exports
 npod_name: "K8s_Lenovo"

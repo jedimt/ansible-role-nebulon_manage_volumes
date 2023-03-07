@@ -1,6 +1,5 @@
 ---
 # tasks file for ansible-role-nebulon-manage-volumes
-# To-Do: Add functionality to remove exports and volumes
 
 - name: Retrieve nPod by name
   nebulon.nebulon_on.neb_npod_info:
@@ -42,11 +41,6 @@
   loop: "{{ volumes }}"
   register: npod_volumes
   tags: get_volumes
-
-# - name: debug
-#   debug:
-#     var: npod_volumes
-#   tags: get_volumes
 
 - name: Remove LUN exports
   nebulon.nebulon_on.neb_volume_access:

@@ -18,13 +18,6 @@ host_uuid:
 
 # List of volumes to manage (create or remove)
 volumes:
-  # Trying to see if I can get Kadalu running without storage on the master node
-  # - name: "server-09-local-kadalu"
-  #   size: 1000000000000
-  #   mirrored: True
-  #   owner_spu_serial: 012386435A39449519
-  #   backup_spu_serial: 01231C5BA68435FC19
-  #   state: "{{ volume_state }}"
 
   - name: "server-10-local-kadalu"
     size: 1000000000000

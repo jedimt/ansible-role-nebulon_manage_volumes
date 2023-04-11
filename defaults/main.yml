@@ -1,5 +1,5 @@
 ---
-# defaults file for ansible-role-nebulon-manage-volumes
+# defaults file for jedimt.nebulon_manage_volumes
 
 # State for all volumes (present|absent)
 volume_state: present

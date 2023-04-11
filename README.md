@@ -89,7 +89,7 @@ Example Playbook
         - "../../credentials.yml"
 
       roles:
-        - { role: ansible-role-nebulon-manage-volumes }
+        - { role: jedimt.nebulon_manage_volumes }
 
 License
 -------

@@ -1,5 +1,5 @@
 ---
-# tasks file for ansible-role-nebulon-manage-volumes
+# tasks file for jedimt.nebulon_manage_volumes
 
 - name: Retrieve nPod by name
   nebulon.nebulon_on.neb_npod_info:

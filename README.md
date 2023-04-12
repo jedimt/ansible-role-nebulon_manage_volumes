@@ -12,15 +12,17 @@ Requirements
 Role Variables
 --------------
 
-    # State for all volumes
-    volume_state: absent
+Variables are defined in the defaults/main.yml file. In this example, the SPU serial numbers are stored in an ansible vault as well.
 
-    # Specify LUN export method
+    # State for all volumes (present|absent)
+    volume_state: present
+
+    # Specify LUN export method (does not affect underlying volume)
     # (present|all) -> All nPod servers can access export
     # (host) -> Make export available to a single host. Requires host_uuid
     # (local) -> Make export available only to the local host that owns the volume
     # (absent) -> Remove the volume export
-    export_type: absent
+    export_type: local
 
     # nPod name to use when managing volumes/exports
     npod_name: "K8s_Lenovo"
@@ -29,32 +31,25 @@ Role Variables
 
     # List of volumes to manage (create or remove)
     volumes:
-      - name: "server-09-local-kadalu"
-        size: 1000000000000
-        mirrored: True
-        owner_spu_serial: 012386435A3944xxxx
-        backup_spu_serial: 01231C5BA68435xxxx
-        state: "{{ volume_state }}"
-
       - name: "server-10-local-kadalu"
         size: 1000000000000
-        mirrored: True
-        owner_spu_serial: 01231C5BA68435xxxx
-        backup_spu_serial: 012386435A3944xxxx
+        mirrored: true
+        owner_spu_serial: "{{ server-10.spu-serial }}"
+        backup_spu_serial: "{{ server-09-spu-serial }}"
         state: "{{ volume_state }}"
 
       - name: "server-11-local-kadalu"
         size: 1000000000000
-        mirrored: True
-        owner_spu_serial: 01234C1DDA9533xxxx
-        backup_spu_serial: 01236AE13059FDxxxx
+        mirrored: true
+        owner_spu_serial: "{{ server-11-spu-serial }}"
+        backup_spu_serial: "{{server-12-spu-serial }}"
         state: "{{ volume_state }}"
 
       - name: "server-12-local-kadalu"
         size: 1000000000000
-        mirrored: True
-        owner_spu_serial: 01236AE13059FDxxxx
-        backup_spu_serial: 01234C1DDA9533xxxx
+        mirrored: true
+        owner_spu_serial: "{{server-12-spu-serial }}"
+        backup_spu_serial: "{{ server-11-spu-serial }}"
         state: "{{ volume_state }}"
 
 Dependencies
@@ -70,7 +65,7 @@ Example Playbook
     # ===========================================================================
 
     # Example invocation:
-    # ansible-playbook -i inventory/lenovo.yml playbooks/nebulon_volume/manage_nebulon_volumes.yml
+    # ansible-playbook -i inventory/lenovo.yml playbooks/ansible-playbook-nebulon-volume/manage_nebulon_volumes.yml
 
     - name: Manage Nebulon Volumes
       hosts: localhost
@@ -87,6 +82,8 @@ Example Playbook
       vars_files:
         # Ansible vault with all required passwords
         - "../../credentials.yml"
+        # Ansible vault with server and SPU serials
+        - "../../serials.yml"
 
       roles:
         - { role: jedimt.nebulon_manage_volumes }

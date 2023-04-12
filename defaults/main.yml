@@ -1,6 +1,4 @@
 ---
-# defaults file for jedimt.nebulon_manage_volumes
-
 # State for all volumes (present|absent)
 volume_state: present
 
@@ -18,24 +16,23 @@ host_uuid:
 
 # List of volumes to manage (create or remove)
 volumes:
-
   - name: "server-10-local-kadalu"
     size: 1000000000000
-    mirrored: True
-    owner_spu_serial: 01231C5BA68435FC19
-    backup_spu_serial: 012386435A39449519
+    mirrored: true
+    owner_spu_serial: "{{ server-10.spu-serial }}"
+    backup_spu_serial: "{{ server-09-spu-serial }}"
     state: "{{ volume_state }}"
 
   - name: "server-11-local-kadalu"
     size: 1000000000000
-    mirrored: True
-    owner_spu_serial: 01234C1DDA95332EEE
-    backup_spu_serial: 01236AE13059FD35EE
+    mirrored: true
+    owner_spu_serial: "{{ server-11-spu-serial }}"
+    backup_spu_serial: "{{server-12-spu-serial }}"
     state: "{{ volume_state }}"
 
   - name: "server-12-local-kadalu"
     size: 1000000000000
-    mirrored: True
-    owner_spu_serial: 01236AE13059FD35EE
-    backup_spu_serial: 01234C1DDA95332EEE
+    mirrored: true
+    owner_spu_serial: "{{server-12-spu-serial }}"
+    backup_spu_serial: "{{ server-11-spu-serial }}"
     state: "{{ volume_state }}"

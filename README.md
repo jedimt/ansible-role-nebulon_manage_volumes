@@ -34,7 +34,7 @@ Variables are defined in the defaults/main.yml file. In this example, the SPU se
       - name: "server-10-local-kadalu"
         size: 1000000000000
         mirrored: true
-        owner_spu_serial: "{{ server-10.spu-serial }}"
+        owner_spu_serial: "{{ server-10-spu-serial }}"
         backup_spu_serial: "{{ server-09-spu-serial }}"
         state: "{{ volume_state }}"
 

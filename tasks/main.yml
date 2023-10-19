@@ -7,7 +7,7 @@
   register: npod_data
   tags: npod_data
 
-- name: Create volumes
+- name: Create mirrored volumes
   nebulon.nebulon_on.neb_volume:
     name: "{{ item.name }}"
     npod_uuid: "{{ npod_data.npods[0].uuid }}"
@@ -20,6 +20,21 @@
   register: volume_data
   when:
     - export_type != "absent"
+    - backup_spu_serial is defined
+
+- name: Create non-mirrored volumes
+  nebulon.nebulon_on.neb_volume:
+    name: "{{ item.name }}"
+    npod_uuid: "{{ npod_data.npods[0].uuid }}"
+    size: "{{ item.size }}"
+    mirrored: "{{ item.mirrored }}"
+    owner_spu_serial: "{{ item.owner_spu_serial }}"
+    state: "{{ item.state }}"
+  loop: "{{ volumes }}"
+  register: volume_data
+  when:
+    - export_type != "absent"
+    - backup_spu_serial is not defined
 
 - name: Create LUN exports - Set exports to {{ export_type }}
   nebulon.nebulon_on.neb_volume_access:
